@@ -10,6 +10,8 @@ def stock_plot(data):
     plt.ylabel('Close Price')
     plt.title('Market Anomaly Detection')
     plt.legend()
+    plt.savefig("static\images\stock_plot.png")
+    
     plt.show()
 
 def sentiment_plot(data):

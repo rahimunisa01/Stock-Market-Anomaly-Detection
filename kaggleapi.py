@@ -4,6 +4,7 @@ load_dotenv()
 
 #the kaggle credentials
 KAGGLE_USERNAME = os.getenv("kaggle_username")
+# print (KAGGLE_USERNAME)
 KAGGLE_KEY = os.getenv("kaggle_key")
 SERPAPI_KEY = os.getenv("SERPAPI_KEY")
 
