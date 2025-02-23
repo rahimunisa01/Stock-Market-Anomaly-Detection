@@ -3,8 +3,8 @@ import os
 load_dotenv()
 
 #the kaggle credentials
-KAGGLE_USERNAME = os.getenv("kaggle_username")
-KAGGLE_KEY = os.getenv("kaggle_key")
+KAGGLE_USERNAME = os.getenv("KAGGLE_USERNAME")
+KAGGLE_KEY = os.getenv("KAGGLE_KEY")
 SERPAPI_KEY = os.getenv("SERPAPI_KEY")
 
 #dataset details

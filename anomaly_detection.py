@@ -1,9 +1,18 @@
+from numba import njit
+import numpy as np
 import pandas as pd
-from sklearn.ensemble import IsolationForest
 
-def anomalies(data, features =['Daily_Return', 'Volatility_20'], contamination = 0.01):
-    model_data = data[features].dropna()
-    iso_model = IsolationForest(contamination=contamination, random_state=42)
-    model_data['Anomaly'] = iso_model.fit_predict(model_data)
-    data.loc[model_data.index, 'Anomaly'] = model_data['Anomaly']
+@njit
+def detect_anomalies(data):
+    median = np.median(data)
+    std_dev = np.std(data)
+    return np.abs(data - median) > 2 * std_dev
+
+def anomalies(data):
+    if "Daily_Return" not in data.columns:
+        print("Error: 'Daily_Return' column not found.")
+        return data
+    
+    anomaly_indices = detect_anomalies(data["Daily_Return"].to_numpy())
+    data["Anomaly"] = anomaly_indices.astype(int)
     return data

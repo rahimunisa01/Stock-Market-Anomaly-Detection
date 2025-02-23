@@ -1,28 +1,52 @@
+import streamlit as st
+import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
-def stock_plot(data):
-    plt.figure(figsize=(12,6))
-    plt.plot(data['Date'], data['Close*'], label = 'Close Price', color = 'blue')
-    anomalies = data[data['Anomaly']== -1]
-    plt.scatter(anomalies['Date'], anomalies['Close*'], color = 'red', label = 'Anomaly')
-    plt.xlabel('Date')
-    plt.ylabel('Close Price')
-    plt.title('Market Anomaly Detection')
-    plt.legend()
-    plt.show()
+def load_data():
+    """Load processed stock market and sentiment data."""
+    try:
+        data = pd.read_csv("processed_data.csv")
+        data["Date"] = pd.to_datetime(data["Date"])
+        return data
+    except FileNotFoundError:
+        return None
 
-def sentiment_plot(data):
-    plt.figure(figsize=(10,6))
-    sns.kdeplot(data[data['Anomaly']==-1]['Daily_Return'].dropna(), label='Anomaly', shade=True)
-    sns.kdeplot(data[data['Anomaly']==1]['Daily_Return'].dropna(), label='Normal', shade=True)
-    plt.title("Distribution of Daily Returns: Anomaly vs Normal")
-    plt.xlabel("Daily Return")
-    plt.legend()
-    plt.show()
+def load_insights():
+    """Load AI-generated insights."""
+    try:
+        with open("insights.txt", "r") as file:
+            return file.read()
+    except FileNotFoundError:
+        return "No insights available."
 
-def plot_correlation_heatmap(df):
-    plt.figure(figsize=(10,8))
-    sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
-    plt.title("Correlation Matrix")
-    plt.show()
+def display_dashboard():
+    st.title("Stock Market & Sentiment Analysis Dashboard")
+
+    data = load_data()
+    insights = load_insights()
+
+    if data is not None:
+        st.write("### Stock Market Data")
+        st.dataframe(data)
+
+        st.write("### Stock Market Trends")
+        fig, ax = plt.subplots()
+        ax.plot(data["Date"], data["Close"], label="Stock Price", color="blue")
+        ax.set_title("Stock Price Over Time")
+        ax.legend()
+        st.pyplot(fig)
+
+        st.write("### Sentiment Analysis")
+        fig, ax = plt.subplots()
+        ax.plot(data["Date"], data["Sentiment_Score"], label="Sentiment Score", color="red")
+        ax.set_title("Market Sentiment Over Time")
+        ax.legend()
+        st.pyplot(fig)
+
+        st.write("### AI-Generated Insights")
+        st.write(insights)
+    else:
+        st.write("No data available. Run the pipeline first.")
+
+if __name__ == "__main__":
+    display_dashboard()
