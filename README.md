@@ -1,1 +1,1 @@
-# Stock-Market-Anomaly-Detection
+# Stock-Market-Anomaly-Detection - Hackathon project
